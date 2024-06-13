@@ -4,34 +4,28 @@ import lombok.extern.log4j.Log4j;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Log4j
 public class ResourceFilesUtil {
-    public static Set<String> getResourceFiles(String path) throws URISyntaxException, IOException {
-        Set<String> filenames = new HashSet<>();
+    public static Set<Path> getFiles(String path,String ext) throws URISyntaxException, IOException {
 
         Path resourcesPath = Paths.get(path);
 
         try (Stream<Path> walk = Files.walk(resourcesPath)) {
-             List<Path> list = walk
+            Set<Path> filenames = walk
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".yaml"))
-                    .toList();
-
-             list.forEach(log::debug);
-
-
+                    .filter(p -> p.toString()
+                                  .endsWith(ext))
+                    .collect(Collectors.toSet());
+            return filenames;
         }
-        return filenames;
+
 /*
         try {
         // Получаем URL ресурса по указанному пути

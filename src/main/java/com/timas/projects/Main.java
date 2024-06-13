@@ -29,17 +29,12 @@ import java.net.URISyntaxException;
 @Log4j
 public class Main {
 
-    public static void main(String[] args) throws URISyntaxException, IOException {
+    public static void main(String[] args) throws Exception {
 
-        System.out.println("IslandLife->");
-
-
-        log.debug("IslandLife starting...");
-        log.info("IslandLife starting...");
-        log.warn("IslandLife starting...");
-        log.error("IslandLife starting...");
-
-        log.debug( ResourceFilesUtil.getResourceFiles("src/main/resources") );
+        try(IslandLife islandLife = new IslandLife(args.length > 0 ? args[0] : null))
+        {
+            islandLife.start();
+        }
 
 
 
