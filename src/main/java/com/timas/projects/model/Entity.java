@@ -1,17 +1,23 @@
 package com.timas.projects.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 abstract public class Entity {
-   /* Вес сущности */
+
+   @JsonProperty
    char icon;
+
+   @JsonProperty
    float weight;
+
+   @JsonProperty
    float maxWeight;
 
-   /* Максимальное количество сущности этого вида на одной клетке */
+   @JsonProperty
    int maxAmount;
 }

@@ -1,3 +1,8 @@
 world:
-  sizeX: 10
-  sizeY: 10
+ sizeX: 10
+ sizeY: 10
+probability_eaten:
+  Wolf:
+    Rabbit: 60
+  Rabbit:
+    Grass: 100

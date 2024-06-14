@@ -5,5 +5,6 @@ import com.timas.projects.model.alive.Alive;
 /**
  * Флора
  */
+
 abstract public class Flora extends Alive {
 }
