@@ -25,7 +25,7 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Config {
-    final static String ENTITYES_PATH = "com.timas.projects.game.entity";
+    final static String ENTITIES_PATH = "com.timas.projects.game.entity";
     final static String DEFAULT_EXT = ".yaml";
     final static String DEFAULT_CONFIG = "config" + DEFAULT_EXT;
     final static String DEFAULT_CONFIG_DIR = "src/main/resources/config/";
@@ -144,7 +144,7 @@ public class Config {
         //Prepare whitelist in package
         Map<String, Class<?>> whiteList = new HashMap<>();
         try (ScanResult scanResult = new ClassGraph()
-                .acceptPackages(ENTITYES_PATH)
+                .acceptPackages(ENTITIES_PATH)
                 .scan()) {
             for (ClassInfo classInfo : scanResult
                     .getSubclasses(Entity.class)
