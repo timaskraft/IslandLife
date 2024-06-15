@@ -1,8 +1,8 @@
-package com.timas.projects.model.alive;
+package com.timas.projects.game.entity.alive;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.timas.projects.model.Entity;
+import com.timas.projects.game.entity.Entity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

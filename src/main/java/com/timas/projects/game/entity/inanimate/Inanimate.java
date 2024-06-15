@@ -1,7 +1,7 @@
-package com.timas.projects.model.inanimate;
+package com.timas.projects.game.entity.inanimate;
 
 
-import com.timas.projects.model.Entity;
+import com.timas.projects.game.entity.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

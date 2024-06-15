@@ -1,9 +1,11 @@
 package com.timas.projects.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.timas.projects.model.Entity;
+import com.timas.projects.game.ProbabilityEaten;
+import com.timas.projects.game.World;
+import com.timas.projects.game.entity.Entity;
+import com.timas.projects.services.config.YamlReaderConfigService;
 import com.timas.projects.utils.ResourceFilesUtil;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -13,132 +15,145 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Log4j
 @ToString
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Config {
 
+public class Config {
+    final static String ENTITYES_PATH = "com.timas.projects.game.entity";
     final static String DEFAULT_EXT = ".yaml";
     final static String DEFAULT_CONFIG = "config" + DEFAULT_EXT;
-    final static String DEFAULT_CONFIG_IN_RESOURCES = DEFAULT_CONFIG;
+    final static String DEFAULT_CONFIG_DIR = "src/main/resources/config/";
+    final static String DEFAULT_CONFIG_IN_RESOURCES = DEFAULT_CONFIG_DIR+DEFAULT_CONFIG;
     final static String DEFAULT_CONFIG_ENTITIES_DIR = "src/main/resources/config/entity";
     final static String property_name_class = "name";
 
     final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-    final String configFile;
+    final static Map<String, Class<?>> whiteListClassOfEntity = getWhiteListClassOfEntity();
+
+    // World
+    World world;
+
+    // who eaten who
+    ProbabilityEaten probabilityEaten;
 
 
-    int sizeX;
-    int sizeY;
+    // Map of Map - chance of who eats who
+    Map<Class<?>,Map<Class<?>,Integer> > probability_eaten;
 
+    // Set of all possible entities in the world
     Set<?> entitySet;
-    Map<String, Class<?>> whiteList;
 
-    public Config(String configFile) {
-        if (configFile != null) {
-            this.configFile = configFile;
-            log.info("Use config:" + configFile);
-        } else {
-            //TODO:: <read config from yaml> -> get config from root dir else get config from resources
-
-            this.configFile = DEFAULT_CONFIG_IN_RESOURCES;
-            log.info("Use default config from resource:" + this.configFile);
-        }
-
-        init();
+    public Config() throws Exception {
+      init(null);
+    }
+    public Config(String configFile) throws Exception {
+      init(configFile);
     }
 
-    void init() {
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    void init(String configFile) throws Exception {
 
-        // default settings - read config.yaml
-        sizeX = 10;
-        sizeY = 10;
-        //--------
-
-        //Prepare whitelist in package
-        whiteList = new HashMap<>();
-        try (ScanResult scanResult = new ClassGraph()
-                .acceptPackages("com.timas.projects.model")
-                .scan()) {
-            for (ClassInfo classInfo : scanResult
-                                       .getSubclasses(Entity.class)
-                                       .filter(classInfo -> !classInfo.isAbstract())
-                ) {
-                    whiteList.put(classInfo.getSimpleName(), classInfo.loadClass());
-                  }
+        log.info("Configuration started...");
+        if(configFile==null) {
+            log.info("Use default config:" + DEFAULT_CONFIG_IN_RESOURCES);
+            configFile = DEFAULT_CONFIG_IN_RESOURCES;
+        }
+        else {
+            log.info("Use config:" + configFile);
         }
 
-        log.debug("whiteList class:"+whiteList.toString());
+        YamlReaderConfigService yamlReaderConfigService = new YamlReaderConfigService();
 
-        // read all entity to set
+        Map<String,Object> configData = yamlReaderConfigService.readYamlFile(configFile);
+
+        if( configData==null)
+            throw new Exception("Config "+configFile+" read failure");
+
+        //-------------------------------
+        Map<String,Object> worldProperty = (Map<String, Object>) yamlReaderConfigService.getProperty(configData,"world");
+
+        if (worldProperty.isEmpty())
+            throw new Exception("Parameter <world> not found in config file "+configFile);
+
+        world = yamlReaderConfigService.getValue(worldProperty, World.class);
+
+        //-------------------------------
+        Set<File> yaml_files_entity = ResourceFilesUtil.getFiles(DEFAULT_CONFIG_ENTITIES_DIR, DEFAULT_EXT);
+
+        if (yaml_files_entity.isEmpty())
+            throw new Exception("Config yaml files for entity not found");
+
         entitySet = new HashSet<>();
 
-        log.debug("Reading entities config yaml...");
-        try {
-            Set<Path> entities_files = ResourceFilesUtil.getFiles(DEFAULT_CONFIG_ENTITIES_DIR, DEFAULT_EXT);
-            entities_files.forEach(entity -> {
-                log.debug("found yaml file:"+entity.toString());
-                try {
-                    entitySet.add(readOnlyValidEntity(entity.toFile()));
-                } catch (Exception e) {
-                   log.debug(e.getLocalizedMessage());
-                }
-            });
+        for (File file : yaml_files_entity) {
+            var data = yamlReaderConfigService.readYamlFile(file.getPath());
 
-        } catch (Exception e) {
-            log.error(e.getLocalizedMessage());
+            String name = (String) data.get(property_name_class);
+
+            if (name == null ) {
+                log.error("skip " + file.getName() + ":the file is not valid");
+                continue;
+            }
+            if (!whiteListClassOfEntity.containsKey(name)) {
+                log.error("skip " + file.getName() + ": the file is not whitelisted");
+                continue;
+            }
+
+            Class<?> clazz_entity = whiteListClassOfEntity.get(name);
+
+            try
+            {
+                entitySet.add(yamlReaderConfigService.getValue(data,clazz_entity));
+                log.error("serialization done: "+file.getName()+" -> "+clazz_entity.toString());
+            }catch (Exception e)
+            {
+                log.error("deserialization error: "+file.getName()+" -> "+clazz_entity.toString());
+            }
         }
 
         if (entitySet.isEmpty())
-            throw new RuntimeException("Can't run IcelandLife without Entity");
+            throw new Exception("Entities serialization failed");
 
-        log.debug("deserialize " + entitySet.size() + " objects:"+entitySet.toString());
+        log.debug("Entities serialization completed:"+entitySet);
 
-        entitySet.forEach(e->{
-            log.debug(e.toString());
-        });
+        //-------------------------------
+        Map<String,Map<String,Integer>> probabilityEatenProperties = (Map<String,Map<String,Integer>>) yamlReaderConfigService.getProperty(configData,"probability_eaten");
+        log.debug(probabilityEatenProperties);
+        if (probabilityEatenProperties.isEmpty())
+            throw new Exception("parameter <probability_eaten> not found in config file "+configFile);
+        probabilityEaten = new ProbabilityEaten(probabilityEatenProperties,whiteListClassOfEntity);
+        log.debug("Probability eaten configure completed");
 
+        //-------------------------------
 
-
-
+        log.info("Configuration completed");
     }
 
-    // todo:: refactor readOnlyValidEntity - to service ???
-    <T> T readOnlyValidEntity(File file) throws Exception {
-
-        FileInputStream inputStream = new FileInputStream(file);
-        Yaml yaml = new Yaml();
-        Map<String, Object> data = yaml.load(inputStream);
-
-        // get property "name" - its only One check...fine
-        String name = (String) data.get(property_name_class);
-        if (name != null) {
-            // check in whiteList entity class
-            if (whiteList.containsKey(name)) {
-
-                log.debug("deserialize " + file.getName() + " to " + whiteList.get(name));
-                Class<T> clazz_entity = (Class<T>) whiteList.get(name);
-
-                return mapper.readValue(file, clazz_entity );
-
-            } else
-                throw new Exception("unknown class " + name + " in yaml file " + file.getName());
-        } else
-            throw new Exception("skip " + file.getName() + ": file not valid");
-
-
+    /**
+     *  Получить все классы, в иерархии сущностей Entity
+     * @return все возможные классы Entity
+     */
+    private static Map<String, Class<?>> getWhiteListClassOfEntity()
+    {
+        //Prepare whitelist in package
+        Map<String, Class<?>> whiteList = new HashMap<>();
+        try (ScanResult scanResult = new ClassGraph()
+                .acceptPackages(ENTITYES_PATH)
+                .scan()) {
+            for (ClassInfo classInfo : scanResult
+                    .getSubclasses(Entity.class)
+                    .filter(classInfo -> !classInfo.isAbstract())
+            ) {
+                whiteList.put(classInfo.getSimpleName(), classInfo.loadClass());
+            }
+        }
+        return whiteList;
     }
+
 }

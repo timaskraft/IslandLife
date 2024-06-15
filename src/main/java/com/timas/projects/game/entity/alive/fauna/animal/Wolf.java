@@ -1,4 +1,4 @@
-package com.timas.projects.model.alive.fauna.animal;
+package com.timas.projects.game.entity.alive.fauna.animal;
 
 
 import lombok.ToString;

@@ -1,4 +1,4 @@
-package com.timas.projects.model.alive.flora.herbs;
+package com.timas.projects.game.entity.alive.flora.herbs;
 
 
 

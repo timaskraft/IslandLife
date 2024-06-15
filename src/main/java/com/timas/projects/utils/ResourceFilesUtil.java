@@ -2,6 +2,7 @@ package com.timas.projects.utils;
 
 import lombok.extern.log4j.Log4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -13,15 +14,16 @@ import java.util.stream.Stream;
 
 @Log4j
 public class ResourceFilesUtil {
-    public static Set<Path> getFiles(String path,String ext) throws URISyntaxException, IOException {
+    public static Set<File> getFiles(String path, String ext) throws URISyntaxException, IOException {
 
         Path resourcesPath = Paths.get(path);
 
         try (Stream<Path> walk = Files.walk(resourcesPath)) {
-            Set<Path> filenames = walk
+            Set<File> filenames = walk
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString()
                                   .endsWith(ext))
+                    .map(Path::toFile)
                     .collect(Collectors.toSet());
             return filenames;
         }

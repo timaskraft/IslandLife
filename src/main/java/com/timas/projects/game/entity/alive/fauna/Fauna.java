@@ -1,6 +1,6 @@
-package com.timas.projects.model.alive.fauna;
+package com.timas.projects.game.entity.alive.fauna;
 
-import com.timas.projects.model.alive.Alive;
+import com.timas.projects.game.entity.alive.Alive;
 import lombok.ToString;
 
 
