@@ -31,4 +31,6 @@ abstract public class Alive extends Entity {
 
     @JsonProperty
     float maxFood;
+
+
 }

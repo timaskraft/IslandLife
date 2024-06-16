@@ -1,6 +1,7 @@
 name: Rabbit
-icon: R
+icon: 🐇
 maxWeight: 2
 maxAmount: 150
 maxSpeed:  2
 maxFood:   0.45
+chanceReproduce: 60

@@ -1,4 +1,5 @@
 name: Grass
-icon: |
+icon: 🌱
 maxWeight: 1
 maxAmount: 200
+chanceReproduce: 90

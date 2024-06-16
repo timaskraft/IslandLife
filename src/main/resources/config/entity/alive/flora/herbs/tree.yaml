@@ -2,3 +2,4 @@ name: Tree
 icon: T
 maxWeight: 300
 maxAmount: 20
+chanceReproduce: 60

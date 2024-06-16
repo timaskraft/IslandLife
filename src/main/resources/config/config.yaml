@@ -1,5 +1,5 @@
 world:
- sizeX: 10
+ sizeX: 20
  sizeY: 10
 probability_eaten:
   Wolf:

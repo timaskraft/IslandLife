@@ -1,7 +1,8 @@
-package com.timas.projects.game.entity.alive.fauna.animal;
+package com.timas.projects.game.entity.alive.fauna.animals;
 
 import com.timas.projects.game.entity.alive.fauna.Fauna;
 import lombok.AccessLevel;
+
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 

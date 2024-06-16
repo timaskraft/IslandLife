@@ -1,0 +1,10 @@
+Wolf:
+  Rabbit: 60
+  Duck: 40
+  Giraffe: 10
+Rabbit:
+  Grass: 100
+Duck:
+  Grass: 100
+Giraffe:
+  Grass: 100
