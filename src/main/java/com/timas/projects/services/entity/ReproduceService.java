@@ -1,22 +1,23 @@
 package com.timas.projects.services.entity;
 
 import com.timas.projects.game.entity.Entity;
-import com.timas.projects.game.world.Cell;
+import com.timas.projects.game.entity.alive.fauna.Fauna;
 import com.timas.projects.repository.EntityFactory;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
-import java.util.Map;
-import java.util.Set;
-
+@Getter
+@Log4j
+@RequiredArgsConstructor
 public class ReproduceService {
 
+    private final EntityFactory entityFactory;
 
-    private Entity male;
-    private Entity female;
+    public Entity reproduce(Entity entity) throws CloneNotSupportedException {
+        Entity cloneEntity = entityFactory.cloneEntity(entity);
 
-
-
-
+        return cloneEntity;
+    }
 
 }

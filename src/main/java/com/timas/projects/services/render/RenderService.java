@@ -15,9 +15,9 @@ public class RenderService {
         this.renderStrategy = renderStrategy;
     }
 
-    public void render(Field field) {
+    public void render(RenderParam renderParam) {
         if (renderStrategy != null) {
-            renderStrategy.render(field);
+            renderStrategy.render(renderParam);
         } else {
             throw new IllegalStateException("Render strategy not set");
         }

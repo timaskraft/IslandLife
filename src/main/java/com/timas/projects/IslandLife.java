@@ -1,22 +1,26 @@
 package com.timas.projects;
 
 import com.timas.projects.game.entity.Entity;
+import com.timas.projects.game.entity.alive.Alive;
 import com.timas.projects.game.relation.RelationEaten;
 import com.timas.projects.game.world.World;
 import com.timas.projects.repository.EntityFactory;
 import com.timas.projects.repository.RelationEatenCreator;
 import com.timas.projects.repository.WordCreator;
-import com.timas.projects.services.entity.GeneratorCoordinator;
-import com.timas.projects.services.random.RandomGeneratorService;
+import com.timas.projects.repository.WorldModifier;
+import com.timas.projects.services.entity.FoodCoordinator;
+import com.timas.projects.services.entity.FoodService;
+import com.timas.projects.services.entity.ReproduceCoordinator;
+import com.timas.projects.services.entity.ReproduceService;
 import com.timas.projects.services.random.RandomService;
 import com.timas.projects.services.render.ConsoleRenderStrategy;
+import com.timas.projects.services.render.RenderParam;
 import com.timas.projects.services.render.RenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j;
 
 import java.util.Collection;
-import java.util.List;
 
 @Log4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -25,12 +29,10 @@ public class IslandLife implements AutoCloseable {
     final String configFile;
     // Config config;
 
-
     public IslandLife(String configFile) throws Exception {
         this.configFile = configFile;
         //config = new Config(config_file);
     }
-
 
     // Строим мир, заполняем существами
     public void start() {
@@ -39,57 +41,70 @@ public class IslandLife implements AutoCloseable {
 
         //TODO:: пока без логики передачи конфигурации мира из внешнего файла, т.е. конфиг берем из аннотации config из ресурсов.
 
-        WordCreator wordCreator = new WordCreator();
+        /* Фактор генерации, уменьшает в n раз первичные популяции */
+        int factor_generate = 20;
+        /* максимальное количество циклов */
+        long max_tick = 10;
 
-        World world = wordCreator.getPrototypeOfWorld();
+        ////////////////////////////////////////////////////////////
 
-        world = world.init();
+        /* Инициализация мира */
+        World world = new WordCreator().getPrototypeOfWorld();
+
+        WorldModifier worldModifier = new WorldModifier(world);
+        worldModifier.init();
 
         log.debug(world);
 
-        //world.printWorldToConsole();
-
-
-        /*Фабрика сущностей */
+        /*Инициализация Фабрики сущностей */
         EntityFactory entityFactory = new EntityFactory();
-
-        entityFactory.getPrototypesEntities().forEach(entity -> {
-            log.debug(entity);
-        });
-
 
         /*Взаимосвязи между сущностями, кто кого кушает */
         RelationEaten relationEaten = new RelationEatenCreator(entityFactory.getTypesOfEntities()).getRelationEaten();
 
         log.debug(relationEaten);
 
-        log.info("Island Life simulate start...");
-
         RandomService randomService = new RandomService();
-
 
         RenderService renderService = new RenderService();
         renderService.setRenderStrategy(new ConsoleRenderStrategy());
 
-        RandomGeneratorService randomGeneratorService = new RandomGeneratorService(randomService);
 
-        GeneratorCoordinator generatorCoordinator = new GeneratorCoordinator(entityFactory, randomGeneratorService);
+        ReproduceService reproduceService = new ReproduceService(entityFactory);
+        ReproduceCoordinator reproduceCoordinator = new ReproduceCoordinator(randomService, reproduceService);
 
-        // для одной клетки
-        log.info("Generate field...");
-        for (int y = 0; y < world.getGameField().getSizeY(); y++) {
-            for (int x = 0; x < world.getGameField().getSizeX(); x++) {
+        FoodService foodService = new FoodService();
+        FoodCoordinator foodCoordinator = new FoodCoordinator(randomService,foodService,relationEaten);
 
-                Collection<Entity> genList = generatorCoordinator.generate(entityFactory.getPrototypesEntities());
-                world.getGameField().setCollectionToCell(x,y,genList);
 
+        // Первоначальная генерация.
+        worldModifier.update((coordinate, cell) -> {
+            Collection<Entity> genList = reproduceCoordinator.generate(factor_generate);
+            cell.setValue(genList);
+        });
+
+
+        long current_tick = 0;
+        RenderParam renderParam = new RenderParam();
+
+        log.info("Island Life simulate start...");
+        while(true)
+        {
+            current_tick++;
+
+            renderParam.setTick(current_tick);
+            renderParam.setField(world.getGameField());
+
+            renderService.render(renderParam);
+
+            if (current_tick == max_tick)
+            {
+                log.info("maximum tick reached.");
+                break;
             }
         }
 
-
-        renderService.render(world.getGameField());
-
-
+        log.info("Simulated stop.");
 
 
 
@@ -158,7 +173,6 @@ public class IslandLife implements AutoCloseable {
 
 
     }
-
 
     @Override
     public void close() throws Exception {

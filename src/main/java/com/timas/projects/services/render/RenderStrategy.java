@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public  interface RenderStrategy {
-    void render(Field field);
+    void render(RenderParam renderParam);
 
     default  Map<Class<? extends Entity>, List<Entity>> groupEntitiesByClass(Collection<Entity> entities) {
         return entities.stream()

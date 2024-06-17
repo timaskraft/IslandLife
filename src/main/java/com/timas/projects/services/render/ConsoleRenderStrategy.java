@@ -18,19 +18,20 @@ public class ConsoleRenderStrategy implements RenderStrategy{
 
 
     @Override
-    public void render(Field field) {
-        renderField(field);
+    public void render(RenderParam renderParam) {
+        renderField(renderParam);
 
-        renderStatistic(field);
+        renderStatistic(renderParam);
     }
 
-    private void renderField(Field field)
-    {
-        System.out.println("IslandLife:");
-        for (int y = 0; y < field.getSizeY(); y++) {
-            for (int x = 0; x < field.getSizeX(); x++) {
 
-                Collection<Entity> entityCollection = field.getCollectionFromCell(x,y);
+    private void renderField(RenderParam renderParam)
+    {
+        System.out.println(myFormatStr('='," IslandLife statistics, cycle "+renderParam.tick+" ",renderParam.field.getSizeX() * 4));
+        for (int y = 0; y < renderParam.field.getSizeY(); y++) {
+            for (int x = 0; x < renderParam.field.getSizeX(); x++) {
+
+                Collection<Entity> entityCollection = renderParam.field.getCollectionFromCell(x,y);
 
                 if(entityCollection.isEmpty()) {
                     System.out.print(EMPTY);
@@ -78,13 +79,13 @@ public class ConsoleRenderStrategy implements RenderStrategy{
             System.out.println(message);
         });
     }
-    private void renderStatistic(Field field)
+    private void renderStatistic(RenderParam renderParam)
     {
-        System.out.println("============ Statistics ===========");
-        Collection<Entity> allEntity = field.getAllEntity();
+
+        Collection<Entity> allEntity = renderParam.field.getAllEntity();
 
         Map<Class<? extends Entity>, List<Entity>> faunas = groupEntitiesByClassWithFilter(allEntity,Fauna.class);
-
+        System.out.println(myFormatStr('=',"",renderParam.field.getSizeX() * 4));
         System.out.println("Fauna:");
         printStatisticOfClass(faunas);
 
@@ -92,8 +93,19 @@ public class ConsoleRenderStrategy implements RenderStrategy{
 
         System.out.println("Flora:");
         printStatisticOfClass(floras);
-        System.out.println("===================================");
+        System.out.println(myFormatStr('=',"",renderParam.field.getSizeX() * 4));
 
 
+    }
+
+    private static String myFormatStr(char symbol, String text, int length)
+    {
+        int paddingSize = (length - text.length()) / 2;
+        String symbolStr = String.valueOf(symbol);
+        String padding = new String(new char[paddingSize]).replace("\0", symbolStr);
+        if ((text.length() + paddingSize * 2) < length) {
+            padding += symbolStr;
+        }
+        return padding + text + padding;
     }
 }

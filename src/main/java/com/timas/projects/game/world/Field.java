@@ -43,6 +43,12 @@ public class Field {
     {
         return field[0].length;
     }
+
+    public Cell getCell(int x, int y)
+    {
+        return field[y][x];
+    }
+
     public Collection<Entity> getCollectionFromCell(int x, int y)
     {
         return field[y][x].getValue();

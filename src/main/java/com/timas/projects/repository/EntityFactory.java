@@ -17,6 +17,7 @@ import lombok.extern.log4j.Log4j;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Log4j
 @Data
@@ -129,9 +130,16 @@ public class EntityFactory {
 
     }
 
+    //  private  static Map<Class<? extends Entity>,Entity> PROTOTYPE_OF_ENTITY;
     public Collection<Entity> getPrototypesEntities()
     {
         return PROTOTYPE_OF_ENTITY.values();
+    }
+
+    public Collection<Entity> getPrototypesEntities(Class<?> entityClass) {
+        return PROTOTYPE_OF_ENTITY.values().stream()
+                .filter(entityClass::isInstance)
+                .collect(Collectors.toList());
     }
 
     public Set<Class<? extends Entity>> getTypesOfEntities()

@@ -22,17 +22,6 @@ public class World {
     @ToString.Exclude
     Field gameField;
 
-    public World init()
-    {
-        return init(this.sizeX,this.sizeY);
-    }
-
-    public World init(int sizeX, int sizeY)
-    {
-        gameField = new Field(sizeX,sizeY);
-
-        return this;
-    }
 
 /*
     public void printWorldToConsole()

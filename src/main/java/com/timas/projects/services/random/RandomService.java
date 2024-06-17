@@ -13,9 +13,6 @@ public class RandomService {
         this(SHARED_RANDOM);
     }
 
-    /**
-     * @param random If null is passed in, a default Random is assigned
-     */
     public RandomService(Random random) {
         this.random = random != null ? random : SHARED_RANDOM;
     }
@@ -73,5 +70,23 @@ public class RandomService {
             }
         }
         return new String(hexChars);
+    }
+
+    /*
+      Получить шанс более чем greaterThan
+     */
+
+     public boolean takeChance(int greaterThan)
+    {
+        return (nextInt(100)>greaterThan);
+    }
+    /*
+     Получить процент шанса не более chance процентов от 100
+    */
+    public int chanceReceived(int chance)
+    {
+        int received = nextInt(100);
+
+        return received<chance?received:0;
     }
 }
