@@ -1,9 +1,12 @@
 package com.timas.projects;
 
+import com.timas.projects.config.Configuration;
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
 import com.timas.projects.game.relation.RelationEaten;
+import com.timas.projects.game.world.Cell;
 import com.timas.projects.game.world.World;
+import com.timas.projects.lifecycle.LifeCycleManager;
 import com.timas.projects.repository.EntityFactory;
 import com.timas.projects.repository.RelationEatenCreator;
 import com.timas.projects.repository.WordCreator;
@@ -16,6 +19,7 @@ import com.timas.projects.services.random.RandomService;
 import com.timas.projects.services.render.ConsoleRenderStrategy;
 import com.timas.projects.services.render.RenderParam;
 import com.timas.projects.services.render.RenderService;
+import com.timas.projects.services.render.RenderStrategy;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j;
@@ -27,11 +31,11 @@ import java.util.Collection;
 public class IslandLife implements AutoCloseable {
 
     final String configFile;
-    // Config config;
+    Configuration config;
 
     public IslandLife(String configFile) throws Exception {
         this.configFile = configFile;
-        //config = new Config(config_file);
+        config = new Configuration(configFile);
     }
 
     // Строим мир, заполняем существами
@@ -39,73 +43,36 @@ public class IslandLife implements AutoCloseable {
 
         log.info("Island Life configure...");
 
-        //TODO:: пока без логики передачи конфигурации мира из внешнего файла, т.е. конфиг берем из аннотации config из ресурсов.
-
-        /* Фактор генерации, уменьшает в n раз первичные популяции */
-        int factor_generate = 20;
-        /* максимальное количество циклов */
-        long max_tick = 10;
-
-        ////////////////////////////////////////////////////////////
-
-        /* Инициализация мира */
         World world = new WordCreator().getPrototypeOfWorld();
+        /////////////////////////////////////////////////////////////////////////////
 
-        WorldModifier worldModifier = new WorldModifier(world);
-        worldModifier.init();
+        RenderStrategy renderStrategy =null;
+        if (config.isStatistics_console()) {
+            renderStrategy = new ConsoleRenderStrategy();
+        }
 
-        log.debug(world);
+        if (renderStrategy==null)
+            throw new IllegalArgumentException("Statistics rendering method is not selected");
 
-        /*Инициализация Фабрики сущностей */
-        EntityFactory entityFactory = new EntityFactory();
-
-        /*Взаимосвязи между сущностями, кто кого кушает */
-        RelationEaten relationEaten = new RelationEatenCreator(entityFactory.getTypesOfEntities()).getRelationEaten();
-
-        log.debug(relationEaten);
-
-        RandomService randomService = new RandomService();
-
-        RenderService renderService = new RenderService();
-        renderService.setRenderStrategy(new ConsoleRenderStrategy());
-
-
-        ReproduceService reproduceService = new ReproduceService(entityFactory);
-        ReproduceCoordinator reproduceCoordinator = new ReproduceCoordinator(randomService, reproduceService);
-
-        FoodService foodService = new FoodService();
-        FoodCoordinator foodCoordinator = new FoodCoordinator(randomService,foodService,relationEaten);
-
-
-        // Первоначальная генерация.
-        worldModifier.update((coordinate, cell) -> {
-            Collection<Entity> genList = reproduceCoordinator.generate(factor_generate);
-            cell.setValue(genList);
-        });
-
-
-        long current_tick = 0;
-        RenderParam renderParam = new RenderParam();
+        RenderService renderService = new RenderService(renderStrategy);
 
         log.info("Island Life simulate start...");
-        while(true)
-        {
-            current_tick++;
 
-            renderParam.setTick(current_tick);
-            renderParam.setField(world.getGameField());
-
-            renderService.render(renderParam);
-
-            if (current_tick == max_tick)
-            {
-                log.info("maximum tick reached.");
-                break;
-            }
-        }
+        LifeCycleManager manager = new LifeCycleManager(config,renderService,world);
+        manager.startLifeCycle();
 
         log.info("Simulated stop.");
 
+
+    }
+
+    @Override
+    public void close() throws Exception {
+
+        log.info("Island Life simulate done...");
+        // close ALL :)
+    }
+}
 
 
 /*
@@ -170,14 +137,3 @@ public class IslandLife implements AutoCloseable {
       {
           log.error(e.getLocalizedMessage());
       }*/
-
-
-    }
-
-    @Override
-    public void close() throws Exception {
-
-        log.info("Island Life simulate done...");
-        // close ALL :)
-    }
-}

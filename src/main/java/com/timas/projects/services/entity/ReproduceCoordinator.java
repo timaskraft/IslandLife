@@ -3,8 +3,10 @@ package com.timas.projects.services.entity;
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
 import com.timas.projects.game.entity.alive.fauna.Fauna;
+import com.timas.projects.game.entity.alive.flora.Flora;
 import com.timas.projects.game.world.Cell;
 import com.timas.projects.services.random.RandomService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
@@ -12,14 +14,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Log4j
-@RequiredArgsConstructor
 /**
  * Координатор репродукция сущностей. Кого, и как репродуцировать в переданном списке.
  */
+@Log4j
+@RequiredArgsConstructor
 public class ReproduceCoordinator {
 
+    @Getter
     private final RandomService randomService;
+
+    @Getter
     private final ReproduceService reproduceService;
 
     /* Генерация списка из списка, не более чем MaxAmount */
@@ -34,8 +39,14 @@ public class ReproduceCoordinator {
     }
     public Collection<Entity> generate(int factor_generate)
     {
-        return generate(reproduceService.getEntityFactory().getPrototypesEntities(Alive.class),factor_generate);
+        return generate(reproduceService.getEntityFactory().getPrototypesEntities(Alive.class),factor_generate );
     }
+
+    public Collection<Entity> generate(Class <? extends Entity> aClass)
+    {
+        return generate(reproduceService.getEntityFactory().getPrototypesEntities(aClass),1);
+    }
+
     public Collection<Entity> generate(Collection<Entity> entityCollection,int factor_generate)
     {
         List<Entity> newList = new ArrayList<>();
@@ -72,12 +83,12 @@ public class ReproduceCoordinator {
             Entity bornEntity = null;
             if (father == null)
             {
-                if ( randomService.chanceReceived(mother.getChanceReproduce()) >0 )
+                if ( randomService.takeChance(mother.getChanceReproduce())  )
                                      bornEntity = reproduceService.reproduce(mother);
             }else
             {
-                if (       randomService.chanceReceived(mother.getChanceReproduce()) > 0
-                        &  randomService.chanceReceived(father.getChanceReproduce()) > 0
+                if (       randomService.takeChance(mother.getChanceReproduce())
+                        &  randomService.takeChance(father.getChanceReproduce())
                    )
                                      bornEntity = reproduceService.reproduce(mother);
             }

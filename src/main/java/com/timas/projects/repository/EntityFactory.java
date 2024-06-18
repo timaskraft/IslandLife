@@ -137,7 +137,7 @@ public class EntityFactory {
     }
 
     public Collection<Entity> getPrototypesEntities(Class<?> entityClass) {
-        return PROTOTYPE_OF_ENTITY.values().stream()
+        return PROTOTYPE_OF_ENTITY.values().parallelStream()
                 .filter(entityClass::isInstance)
                 .collect(Collectors.toList());
     }

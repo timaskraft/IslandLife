@@ -45,13 +45,13 @@ public class RelationEatenCreator {
 
     private static boolean isItOnEntities(String name_entity)
     {
-        return entities.stream()
+        return entities.parallelStream()
                 .anyMatch(entity -> entity.getSimpleName().equals(name_entity));
     }
 
     // Метод для получения класса по ключу
     private Class<? extends Entity> getClassFromKey(String key, Set<Class<? extends Entity>> entities) {
-        return entities.stream()
+        return entities.parallelStream()
                 .filter(entity -> entity.getSimpleName().equals(key))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Class not found for key: " + key));

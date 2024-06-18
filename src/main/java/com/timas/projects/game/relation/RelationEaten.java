@@ -20,10 +20,24 @@ public class RelationEaten {
 
     private  Map<Class<? extends Entity>, Map<Class <? extends Entity> , Integer>>  relation = new HashMap<>();
 
+
+    //TODO:: Требуетяс рефактр этих методов в сервис
+
     // Метод для добавления отношения и его веса в карту
     public void addRelation(Class<? extends Entity> who, Class<? extends Entity> whom, Integer weight) {
         Map<Class<? extends Entity>, Integer> whomMap = relation.getOrDefault(who, new HashMap<>());
         whomMap.put(whom, weight);
         relation.put(who, whomMap);
     }
+
+    public Map<Class <? extends Entity> , Integer> getEatenMap(Class<? extends Entity> who_key )
+    {
+        return relation.get(who_key);
+    }
+    public Integer getEaten(Class<? extends Entity> who_key, Class<? extends Entity> whom_key )
+    {
+        return getEatenMap(who_key).get(whom_key);
+    }
+
+
 }

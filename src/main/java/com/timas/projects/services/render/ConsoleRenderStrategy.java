@@ -6,9 +6,11 @@ import com.timas.projects.game.entity.alive.flora.Flora;
 import com.timas.projects.game.world.Field;
 import lombok.extern.log4j.Log4j;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j
 public class ConsoleRenderStrategy implements RenderStrategy{
@@ -19,6 +21,7 @@ public class ConsoleRenderStrategy implements RenderStrategy{
 
     @Override
     public void render(RenderParam renderParam) {
+
         renderField(renderParam);
 
         renderStatistic(renderParam);
@@ -70,6 +73,7 @@ public class ConsoleRenderStrategy implements RenderStrategy{
 
     private void printStatisticOfClass(Map<Class<? extends Entity>, List<Entity>> entities)
     {
+        System.out.println("print statistic:"+entities.size());
         entities.forEach((aClass, entity)->{
 
             String icon = entity.get(0).getIcon();
@@ -79,21 +83,40 @@ public class ConsoleRenderStrategy implements RenderStrategy{
             System.out.println(message);
         });
     }
+
+
+    Map<Class<? extends Entity>, List<Entity>> groupEntitiesByClassWithFilter(Collection<Entity> entities, Class<? extends Entity> superClass) {
+
+        Map<Class<? extends Entity>, List<Entity>> map =
+                entities.parallelStream()
+                .filter(entity -> superClass.isAssignableFrom(entity.getClass()))
+                .collect(Collectors.groupingBy(Entity::getClass));
+
+        return  map;
+    }
+
+
     private void renderStatistic(RenderParam renderParam)
     {
 
-        Collection<Entity> allEntity = renderParam.field.getAllEntity();
 
-        Map<Class<? extends Entity>, List<Entity>> faunas = groupEntitiesByClassWithFilter(allEntity,Fauna.class);
-        System.out.println(myFormatStr('=',"",renderParam.field.getSizeX() * 4));
-        System.out.println("Fauna:");
-        printStatisticOfClass(faunas);
+            Collection<Entity> allEntity = new ArrayList<>(renderParam.field.getSnapshotField());
 
-        Map<Class<? extends Entity>, List<Entity>> floras = groupEntitiesByClassWithFilter(allEntity,Flora.class);
+            System.out.println("renderStatistic");
 
-        System.out.println("Flora:");
-        printStatisticOfClass(floras);
-        System.out.println(myFormatStr('=',"",renderParam.field.getSizeX() * 4));
+            Map<Class<? extends Entity>, List<Entity>> faunas = groupEntitiesByClassWithFilter(allEntity,Fauna.class);
+
+            System.out.println(faunas);
+
+            System.out.println(myFormatStr('=',"",renderParam.field.getSizeX() * 4));
+            System.out.println("Fauna:");
+            printStatisticOfClass(faunas);
+
+            Map<Class<? extends Entity>, List<Entity>> floras = groupEntitiesByClassWithFilter(allEntity,Flora.class);
+
+            System.out.println("Flora:");
+            printStatisticOfClass(floras);
+            System.out.println(myFormatStr('=',"",renderParam.field.getSizeX() * 4));
 
 
     }

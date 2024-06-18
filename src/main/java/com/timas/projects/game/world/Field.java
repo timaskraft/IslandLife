@@ -2,15 +2,12 @@ package com.timas.projects.game.world;
 
 import com.timas.projects.game.entity.Entity;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,10 +50,15 @@ public class Field {
     {
         return field[y][x].getValue();
     }
-    public Collection<Entity> getAllEntity()
+    public Cell[][] getField()
     {
-        return Stream.of(field)
-                .flatMap(Stream::of)
+        return field;
+    }
+    public Collection<Entity> getSnapshotField()
+    {
+
+        return Arrays.stream(field)
+                .flatMap(Arrays::stream)
                 .map(Cell::getValue)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

@@ -73,20 +73,13 @@ public class RandomService {
     }
 
     /*
-      Получить шанс более чем greaterThan
+      Получить шанс
      */
 
-     public boolean takeChance(int greaterThan)
+    public boolean takeChance(int max_chance)
     {
-        return (nextInt(100)>greaterThan);
-    }
-    /*
-     Получить процент шанса не более chance процентов от 100
-    */
-    public int chanceReceived(int chance)
-    {
-        int received = nextInt(100);
+          int chance = nextInt(0,100);
 
-        return received<chance?received:0;
+          return (chance<=max_chance);
     }
 }

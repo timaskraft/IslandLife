@@ -23,14 +23,19 @@ abstract public class Alive extends Entity {
     @JsonProperty
     int maxSpeed;
 
+    /* сытость */
+    @JsonProperty
+    float food;
+
     /**
      * Сколько килограммов пищи нужно существу для полного насыщения
      */
     @JsonProperty
-    float food;
-
-    @JsonProperty
     float maxFood;
+
+    /* todo::степень заболевания, 0 - здоров. */
+    @JsonProperty
+    int illness = 0;
 
 
 }
