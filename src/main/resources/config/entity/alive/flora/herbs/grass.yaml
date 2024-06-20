@@ -2,4 +2,4 @@ name: Grass
 icon: 🌱
 maxWeight: 1
 maxAmount: 200
-chanceReproduce: 90
+chanceSpawn: 70

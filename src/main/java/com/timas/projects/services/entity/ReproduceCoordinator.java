@@ -13,6 +13,8 @@ import lombok.extern.log4j.Log4j;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Координатор репродукция сущностей. Кого, и как репродуцировать в переданном списке.
@@ -27,11 +29,6 @@ public class ReproduceCoordinator {
     @Getter
     private final ReproduceService reproduceService;
 
-    /* Генерация списка из списка, не более чем MaxAmount */
-    /* Если без параметра, то взять всех возможных с фабрики */
-    /* Если указан факто генерации, то максимальное количество возможных
-       в одной клетке будет maxAmount / factor_generate
-     */
 
     public Collection<Entity> generate()
     {
@@ -48,8 +45,31 @@ public class ReproduceCoordinator {
     }
 
     public Collection<Entity> generate(Collection<Entity> entityCollection,int factor_generate)
+     {
+        Set<Entity> newList = ConcurrentHashMap.newKeySet();
+        int finalFactor_generate = Math.max(factor_generate, 1);
+        entityCollection.forEach(entity -> {
+
+            /* расселение в соответсвии с шансом спавна */
+            Entity bornEntity = bornWithDefaultChanceSpawn(entity);
+            if (bornEntity!=null)
+                newList.add(bornEntity);
+
+            // случайно возможное количество вида на клетке, шанс не боле чем.
+            //int possible_count_in_cell = randomService.nextInt(0,entity.getMaxAmount()/ finalFactor_generate); //   randomService.chanceReceived(entity.getChanceReproduce());
+            //for (int i = 0; i < possible_count_in_cell; i++) {
+            //    Entity bornEntity = bornWithDefaultChanceSpawn(entity);
+            //    if (bornEntity!=null)
+            //        newList.add(bornEntity);
+           // }
+        });
+
+        return newList;
+    }
+
+    public Collection<Entity> spawn(Collection<Entity> entityCollection,int factor_generate)
     {
-        List<Entity> newList = new ArrayList<>();
+        Set<Entity> newList = ConcurrentHashMap.newKeySet();
         int finalFactor_generate = Math.max(factor_generate, 1);
         entityCollection.forEach(entity -> {
             // случайно возможное количество вида на клетке, шанс не боле чем.
@@ -64,43 +84,33 @@ public class ReproduceCoordinator {
         return newList;
     }
 
-    /* Родить сущность от parent , если это фауна - то назначить пол */
-    /* Пол нужен будет чтобы процедура рождения была гендерно зависимой :)
 
 
-    /* Родить от святого духа */
-    public Entity born(Entity mother)
-    {
-        return born(mother,null);
-    }
-    /* Родить от матери и отца */
-    public Entity born(Entity mother,Entity father)
-    {
-        if (mother==null)
-            throw new IllegalArgumentException("wrong argument for born function");
-
+    public Entity born(Entity who) {
         try {
-            Entity bornEntity = null;
-            if (father == null)
-            {
-                if ( randomService.takeChance(mother.getChanceReproduce())  )
-                                     bornEntity = reproduceService.reproduce(mother);
-            }else
-            {
-                if (       randomService.takeChance(mother.getChanceReproduce())
-                        &  randomService.takeChance(father.getChanceReproduce())
-                   )
-                                     bornEntity = reproduceService.reproduce(mother);
-            }
-
+            Entity bornEntity = reproduceService.reproduce(who);
             if (bornEntity instanceof Fauna) {
                 ((Fauna) bornEntity).setMale(randomService.nextBoolean());
             }
+
             return bornEntity;
+
         }catch (CloneNotSupportedException e)
         {
             log.error(e.getLocalizedMessage());
         }
+        return null;
+    }
+
+    public Entity bornWithDefaultChanceSpawn(Entity who) {
+           if ( randomService.takeChance(who.getChanceSpawn()) )
+                    return born(who);
+           return null;
+    }
+
+    public Entity bornWithChanceSpawn(Entity who,int chanceSpawn) {
+        if ( randomService.takeChance(chanceSpawn) )
+            return born(who);
         return null;
     }
 }

@@ -7,11 +7,16 @@ import lombok.extern.log4j.Log4j;
 @RequiredArgsConstructor
 @Data
 public class Configuration {
+
+    final String level_debug = "DEBUG";
+
     final String config_file;
 
     /* Фактор генерации, уменьшает в n раз первичные популяции */
-    int factor_generate = 20;
+    int factor_generate = 100;
 
+    /* задержка между рутинными операциями, ms */
+    long pause_routine = 1000;
     /* максимальное количество циклов мира от -1 до .... */
     long max_tick = 1000;
 
@@ -31,7 +36,7 @@ public class Configuration {
     /* пауза между любыми ивентами, сек. 0 - ивенты не происходят никогда */
     int event_timeout = 10;
     /* шанс того, что пойдет дождь */
-    int chance_rain = 100;
+    int chance_rain = 30;
 
     //todo:: ивент пожара
     /* шанс пожара в клетке, уничтожает все живое в клетке с шансом chance_kill*/

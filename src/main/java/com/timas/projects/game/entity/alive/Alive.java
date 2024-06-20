@@ -33,9 +33,14 @@ abstract public class Alive extends Entity {
     @JsonProperty
     float maxFood;
 
-    /* todo::степень заболевания, 0 - здоров. */
+    /* Полоска жизни, пока что 100, потом возможно каждой сущности назначить из конфига. Если = 0, то оно мертво */
     @JsonProperty
-    int illness = 0;
+    int live = 100;
+
+    /* Сколько тиков возраст этого организма */
+    @JsonProperty
+    int age = 0;
+
 
 
 }

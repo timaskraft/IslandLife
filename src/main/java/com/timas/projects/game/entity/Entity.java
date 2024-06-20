@@ -26,7 +26,7 @@ abstract public class Entity implements Cloneable{
    int maxAmount;
 
    @JsonProperty
-   int chanceReproduce = 50; //default chance 50x50
+   int chanceSpawn = 50; //default chance reproduce or spawn 50x50
 
    @Override
    public Object clone() throws CloneNotSupportedException {

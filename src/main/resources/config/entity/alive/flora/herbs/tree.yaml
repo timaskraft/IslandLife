@@ -1,5 +1,5 @@
 name: Tree
-icon: T
+icon: 🌳
 maxWeight: 300
 maxAmount: 20
-chanceReproduce: 60
+chanceSpawn: 5

@@ -73,7 +73,7 @@ public class RandomService {
     }
 
     /*
-      Получить шанс
+      take chance, its casino :)
      */
 
     public boolean takeChance(int max_chance)

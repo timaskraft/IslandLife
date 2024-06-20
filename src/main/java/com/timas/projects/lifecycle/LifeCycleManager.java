@@ -11,10 +11,7 @@ import com.timas.projects.lifecycle.tasks.RoutineTask;
 import com.timas.projects.repository.EntityFactory;
 import com.timas.projects.repository.RelationEatenCreator;
 import com.timas.projects.repository.WorldModifier;
-import com.timas.projects.services.entity.FoodCoordinator;
-import com.timas.projects.services.entity.FoodService;
-import com.timas.projects.services.entity.ReproduceCoordinator;
-import com.timas.projects.services.entity.ReproduceService;
+import com.timas.projects.services.entity.*;
 import com.timas.projects.services.random.RandomService;
 import com.timas.projects.services.render.RenderService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +43,10 @@ public class LifeCycleManager {
     private final FoodService foodService = new FoodService();
     private final FoodCoordinator foodCoordinator = new FoodCoordinator(randomService,foodService,relationEaten);
     ////////////////////////////////////////////////////////////////////////////////////////////
+    /* сервис движения */
+    private final MoveService moveService = new MoveService();
+    private final MoveCoordinator moveCoordinator = new MoveCoordinator(randomService,moveService);
+
 
     /* пул потоков */
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
@@ -69,27 +70,25 @@ public class LifeCycleManager {
 
         // Блок 1 - Рутина: покушали - размножились - походили
 
-        RoutineTask routineTask = new RoutineTask();
+        RoutineTask routineTask = new RoutineTask(worldModifier,foodCoordinator,reproduceCoordinator,moveCoordinator,configuration);
 
-        // Блок 2 - Ивенты: рост растений, катаклизмы
+        executorService.scheduleWithFixedDelay(routineTask, 0, configuration.getPause_routine(), TimeUnit.MILLISECONDS);
 
-        EventTask eventsTask = new EventTask(worldModifier,reproduceCoordinator,configuration);
-
-        // Блок 3 - Рендер мира и вывод статистики каждые n секунд
-
-        RenderTask renderTask = new RenderTask(renderService,world);
-
-        // Запуск задач с разными периодами
-
-       // executorService.scheduleWithFixedDelay(routineTask, 0, 100, TimeUnit.MILLISECONDS);
 
         if (configuration.getEvent_timeout()>0) {
-            executorService.scheduleWithFixedDelay(eventsTask, 5, configuration.getEvent_timeout(), TimeUnit.SECONDS);
+            // Блок 2 - Ивенты: рост растений, катаклизмы
+
+            EventTask eventsTask = new EventTask(worldModifier,reproduceCoordinator,configuration);
+
+            executorService.scheduleWithFixedDelay(eventsTask, 0, configuration.getEvent_timeout(), TimeUnit.SECONDS);
         }
 
 
         if (configuration.getStatistics_timeout()>0)
         {
+            // Блок 3 - Рендер мира и вывод статистики каждые n секунд
+            RenderTask renderTask = new RenderTask(renderService,world);
+
             executorService.scheduleWithFixedDelay(renderTask, 0, configuration.getStatistics_timeout(), TimeUnit.SECONDS);
         }
 

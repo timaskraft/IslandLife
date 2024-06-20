@@ -1,10 +1,18 @@
 Wolf:
   Rabbit: 60
   Duck: 40
-  Giraffe: 10
 Rabbit:
   Grass: 100
 Duck:
   Grass: 100
-Giraffe:
-  Grass: 100
+Bear:
+  Duck: 10
+  Rabbit: 80
+  Horse : 40
+  Dear  : 80
+  Mouse : 90
+  Boa   : 80
+Boa:
+  Fox: 15
+  Rabbit: 20
+  Mouse: 40

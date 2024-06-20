@@ -4,4 +4,4 @@ maxWeight: 1
 maxAmount: 200
 maxSpeed:  4
 maxFood:   0.15
-chanceReproduce: 20
+chanceSpawn: 30

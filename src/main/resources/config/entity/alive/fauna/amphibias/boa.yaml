@@ -1,0 +1,7 @@
+name: Boa
+icon: 🐍
+maxWeight: 15
+maxAmount: 30
+maxSpeed:  1
+maxFood:   3
+chanceSpawn: 10

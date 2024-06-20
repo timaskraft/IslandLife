@@ -49,7 +49,6 @@ public class RelationEatenCreator {
                 .anyMatch(entity -> entity.getSimpleName().equals(name_entity));
     }
 
-    // Метод для получения класса по ключу
     private Class<? extends Entity> getClassFromKey(String key, Set<Class<? extends Entity>> entities) {
         return entities.parallelStream()
                 .filter(entity -> entity.getSimpleName().equals(key))

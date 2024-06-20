@@ -5,6 +5,7 @@ import com.timas.projects.game.world.Cell;
 import com.timas.projects.game.world.Coordinate;
 import com.timas.projects.game.world.Field;
 import com.timas.projects.game.world.World;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
@@ -16,8 +17,10 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 @Log4j
+@Getter
 @RequiredArgsConstructor
 public class WorldModifier {
+
 
     final World world;
 
@@ -35,14 +38,22 @@ public class WorldModifier {
     public void update( BiConsumer<Coordinate,Cell> operation)
     {
         Objects.requireNonNull(operation);
-        for (int yy = 0; yy < world.getGameField().getSizeY(); yy++) {
-            for (int xx = 0; xx < world.getGameField().getSizeX(); xx++) {
 
-                Coordinate coordinate = new Coordinate(xx, yy);
-                Cell cell = world.getGameField().getCell(xx,yy);
-                operation.accept(coordinate,cell);
 
+        var rowIterator = world.getGameField().getField().entrySet().iterator();
+        while (rowIterator.hasNext()) {
+            var yRowEntry = rowIterator.next();
+            Integer y = yRowEntry.getKey();
+            var colIterator = yRowEntry.getValue().entrySet().iterator();
+
+            while (colIterator.hasNext()) {
+                var xColEntry = colIterator.next();
+                Integer x = xColEntry.getKey();
+                Cell col = xColEntry.getValue();
+
+                operation.accept(new Coordinate(x, y), col);
             }
         }
+
     }
 }

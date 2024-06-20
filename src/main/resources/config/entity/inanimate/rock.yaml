@@ -1,3 +1,4 @@
-icon: ^
+icon: ⛰
 maxWeight: 1000
 maxAmount: 100
+chanceSpawn: 10

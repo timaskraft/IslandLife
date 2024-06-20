@@ -1,0 +1,7 @@
+name: Bear
+icon: 🐻
+maxWeight: 500
+maxAmount: 5
+maxSpeed:  2
+maxFood:   80
+chanceSpawn: 2
