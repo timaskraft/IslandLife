@@ -31,7 +31,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        try(IslandLife islandLife = new IslandLife(args.length > 0 ? args[0] : null))
+        try(IslandLife islandLife = new IslandLife(args.length > 0 ? args[0] :  "config.yaml"))
         {
             islandLife.start();
         }

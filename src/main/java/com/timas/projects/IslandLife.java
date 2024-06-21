@@ -1,5 +1,8 @@
 package com.timas.projects;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.timas.projects.config.Configuration;
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
@@ -24,6 +27,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j;
 
+import java.io.File;
+import java.net.URI;
 import java.util.Collection;
 
 @Log4j
@@ -34,14 +39,13 @@ public class IslandLife implements AutoCloseable {
     Configuration config;
 
     public IslandLife(String configFile) throws Exception {
+
         this.configFile = configFile;
-        config = new Configuration(configFile);
+        config = loadConfigFromYaml(configFile);
     }
 
     // Строим мир, заполняем существами
     public void start() {
-
-        log.info("Island Life configure...");
 
         World world = new WordCreator().getPrototypeOfWorld();
         /////////////////////////////////////////////////////////////////////////////
@@ -65,6 +69,31 @@ public class IslandLife implements AutoCloseable {
 
 
     }
+
+    private Configuration loadConfigFromYaml(String config_file)
+    {
+        Configuration configuration = new Configuration();
+        try {
+            log.info("Read configuration: "+config_file);
+            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+
+
+            configuration = mapper.readValue( new File(System.getProperty("user.dir") + File.separator + config_file), Configuration.class);
+
+            log.info("Use configuration: "+config_file);
+
+            return configuration;
+        }catch (Exception e)
+        {
+            log.error(e.getLocalizedMessage());
+            log.error("Read "+config_file+" failure. Configuration set on default.");
+        }
+        return configuration;
+    }
+
 
     @Override
     public void close() throws Exception {
