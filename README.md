@@ -1,5 +1,4 @@
 # IslandLife
-### RU
 
 ## **Study project for the second module of** [JavaRush - Java University](https://javarush.com/university?utm_source=site&utm_medium=link_menu&utm_campaign=university)
 
