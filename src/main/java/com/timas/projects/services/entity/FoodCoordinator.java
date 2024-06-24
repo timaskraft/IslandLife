@@ -59,21 +59,13 @@ public class FoodCoordinator {
                         )
                         .findFirst();
 
-                        toBeEaten.ifPresentOrElse(toBe -> {
+                        toBeEaten.ifPresent(toBe -> {
                                     int chance = relationEaten.getEaten(who.getClass(),toBe.getClass());
-                                    //log.debug(who.getName()+" хочет съесть "+toBe.getName()+" с шансом "+chance);
                                     if (randomService.takeChance(chance ) )
                                     {
-                                        //log.debug(who.getName()+" съедает "+toBe.getName());
                                         foodService.eat(who, toBe );
                                         deads.add(toBe);
-                                    }else
-                                    {
-                                     //   log.debug(who.getName()+" не получилось съесть "+toBe.getName()+" с шансом "+chance);
                                     }
-                                },
-                                ()->{
-                                     // log.debug(who.getName()+" остался голодным, некого съесть");
                                 }
                 );
             }

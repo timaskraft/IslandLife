@@ -82,7 +82,7 @@ public class EventSpawnFlora extends Event implements EventOfTheWorld<Long>{
 
 
 /*
-            //способ роста - деление растений на клетке.
+            //альтернативный способ роста - деление растений на клетке.
             cell.getValue()
                     .parallelStream()
                     .filter(Flora.class::isInstance)

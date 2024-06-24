@@ -28,23 +28,5 @@ public class ResourceFilesUtil {
             return filenames;
         }
 
-/*
-        try {
-        // Получаем URL ресурса по указанному пути
-        URL dirURL = ResourceFilesUtil.class.getResource(path);
-        log.debug(dirURL);
-        if (dirURL != null && dirURL.getProtocol().equals("file")) {
-            try (Stream<Path> stream = Files.list(Paths.get(dirURL.toURI()))) {
-                filenames = stream
-                        .filter(Files::isRegularFile)
-                        .map(Path::getFileName)
-                        .map(Path::toString)
-                        .collect(Collectors.toSet());
-            }
-        }
-
-
- */
-
     }
 }

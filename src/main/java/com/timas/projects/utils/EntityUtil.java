@@ -47,10 +47,3 @@ public class EntityUtil {
 
 
 }
-/*
-        Map<Class<? extends Entity>, Class<? extends Entity>> map =
-                entities.parallelStream()
-                        .filter(entity -> superClass.isAssignableFrom(entity.getClass()))
-                        .collect(Collectors.groupingBy(Entity::getClass));
-        return map;
-*/

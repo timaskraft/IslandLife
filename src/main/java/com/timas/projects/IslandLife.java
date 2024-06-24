@@ -35,12 +35,10 @@ import java.util.Collection;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IslandLife implements AutoCloseable {
 
-    final String configFile;
     Configuration config;
 
     public IslandLife(String configFile) throws Exception {
 
-        this.configFile = configFile;
         config = loadConfigFromYaml(configFile);
     }
 
@@ -103,66 +101,3 @@ public class IslandLife implements AutoCloseable {
     }
 }
 
-
-/*
-
-      EntityFactory entityFactory = new EntityFactory(config.getEntitiesDefault());
-
-      log.info("Creating a landscape...");
-      // TODO::вызвать фабрику с фильтром Inanimate - неживое ( поместить разные статичные объекты)
-
-      log.info("Plant plants...");
-      // вызвать фабрику с фильтром Flora
-      Map<Class<? extends Entity>, Entity> flora = config.getEntitiesDefault(Flora.class);
-
-      //садим первоначальные растения.
-      flora.forEach((clazz,entity)->{
-              for (int i = 0; i < entity.getMaxAmount(); i++) {
-
-                  try {
-                      Flora newEntity = (Flora) entityFactory.getNewEntity(clazz);
-
-                      log.debug(newEntity.getName());
-
-                  } catch (CloneNotSupportedException e) {
-                      throw new RuntimeException(e);
-                  }
-              }
-      });
-
-      log.info("Populating the world with creatures...");
-
-      Map<Class<? extends Entity>, Entity> fauna = config.getEntitiesDefault(Fauna.class);
-      // вызвать фабрику с фильтром Fauna
-        //садим первоначальные растения.
-      fauna.forEach((clazz,entity)->{
-            for (int i = 0; i < entity.getMaxAmount(); i++) {
-                try {
-                    Fauna newEntity = (Fauna) entityFactory.getNewEntity(clazz);
-                    log.debug(newEntity.getName());
-                } catch (CloneNotSupportedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-
-      try
-      {
-       //   log.debug("Get test wolf:"+entityFactory.getTestWolf());
-       //   log.debug("Get test wolf:"+entityFactory.getTestWolf());
-
-      }catch (Exception e)
-      {
-          log.error(e.getLocalizedMessage());
-      }
-*/
-
-
-  /*    try
-      {
-          log.debug( ResourceFilesUtil.getFiles("src/main/resources/config/entity",".yaml") );
-      }catch (Exception e)
-      {
-          log.error(e.getLocalizedMessage());
-      }*/

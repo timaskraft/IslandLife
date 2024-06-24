@@ -86,12 +86,7 @@ public class MoveCoordinator{
 
                             if (moveService.move(who,alives, destination ) ) {
                                 movd.add(who);
-
                                 who.setSpeed(who.getSpeed() + 1);
-                               // log.debug(who.getName() + " moved from " + coordinate + " to " + step_coordinate);
-                            }else
-                            {
-                              //  log.error("NOT MOVED "+who.getName() + " moved from " + coordinate + " to " + step_coordinate );
                             }
 
 
@@ -103,10 +98,6 @@ public class MoveCoordinator{
 
                     };
                 }
-               // log.debug("moving "+coordinate);
-                //movd.forEach(e->{
-                //    log.debug(e.getName()+" speed:"+e.getSpeed()+" maxspeed:"+e.getMaxSpeed());
-               // });
         }
 
         return movd;
