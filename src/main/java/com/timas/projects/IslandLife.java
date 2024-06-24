@@ -63,9 +63,6 @@ public class IslandLife implements AutoCloseable {
         LifeCycleManager manager = new LifeCycleManager(config,renderService,world);
         manager.startLifeCycle();
 
-        log.info("Simulated stop.");
-
-
     }
 
     private Configuration loadConfigFromYaml(String config_file)
