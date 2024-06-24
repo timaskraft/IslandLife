@@ -93,7 +93,6 @@ public class IslandLife implements AutoCloseable {
     @Override
     public void close() throws Exception {
 
-        log.info("Island Life simulate done...");
         // close ALL :)
     }
 }
