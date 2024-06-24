@@ -13,5 +13,10 @@ Architecture through services
 * Pattern Factory
 * Streams
 
+You can configure the config.yaml file before launch, 
+otherwise the world settings will be applied by default.
+
+
+
 p.s. alpha version.
 
