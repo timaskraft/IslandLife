@@ -4,7 +4,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.timas.projects.exeptions.InitException;
 import com.timas.projects.annotations.Config;
 import com.timas.projects.game.entity.Entity;
-import com.timas.projects.game.entity.alive.fauna.animals.Wolf;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
@@ -109,14 +108,6 @@ public class EntityFactory {
         return entity;
     }
 
-/*    public EntityFactory()
-    {
-    //   this.entitiesDefault = entitiesDefault;
-       // Инициализация счетчиков для каждого класса сущности
-     //  entitiesDefault.keySet().forEach(entityClass -> number.put(entityClass, new AtomicLong(0)));
-    }*/
-
-
     public Entity getPrototypeEntity(Class<? extends Entity> type)
     {
         if (PROTOTYPE_OF_ENTITY.containsKey(type)) {
@@ -130,12 +121,6 @@ public class EntityFactory {
 
     }
 
-    //  private  static Map<Class<? extends Entity>,Entity> PROTOTYPE_OF_ENTITY;
-    public Collection<Entity> getPrototypesEntities()
-    {
-        return PROTOTYPE_OF_ENTITY.values();
-    }
-
     public Collection<Entity> getPrototypesEntities(Class<?> entityClass) {
         return PROTOTYPE_OF_ENTITY.values().parallelStream()
                 .filter(entityClass::isInstance)
@@ -147,17 +132,6 @@ public class EntityFactory {
         return TYPES_OF_ENTITY;
     }
 
-    public Entity getNewEntity(Class<? extends Entity> clazz) throws CloneNotSupportedException {
-
-        Entity entityDefault = entitiesDefault.get(clazz);
-
-        if (entityDefault != null) {
-            return cloneEntity(entityDefault);
-        } else {
-            return null;
-        }
-
-    }
 
     public Entity cloneEntity(Entity template) throws CloneNotSupportedException {
 
@@ -169,14 +143,6 @@ public class EntityFactory {
         cloned.setName(cloned.getClass().getSimpleName()+"_"+uniqueNumber);
 
         return  cloned;
-    }
-
-
-    public void printDefaultEntity()
-    {
-        entitiesDefault.forEach((k,v)->{
-            System.out.println(k + " "+v);
-        });
     }
 
 

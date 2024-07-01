@@ -1,7 +1,6 @@
 package com.timas.projects.services.entity;
 
 import com.timas.projects.game.entity.Entity;
-import com.timas.projects.game.entity.alive.fauna.Fauna;
 import com.timas.projects.repository.EntityFactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

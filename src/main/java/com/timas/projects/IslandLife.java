@@ -4,23 +4,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.timas.projects.config.Configuration;
-import com.timas.projects.game.entity.Entity;
-import com.timas.projects.game.entity.alive.Alive;
-import com.timas.projects.game.relation.RelationEaten;
-import com.timas.projects.game.world.Cell;
 import com.timas.projects.game.world.World;
 import com.timas.projects.lifecycle.LifeCycleManager;
-import com.timas.projects.repository.EntityFactory;
-import com.timas.projects.repository.RelationEatenCreator;
 import com.timas.projects.repository.WordCreator;
-import com.timas.projects.repository.WorldModifier;
-import com.timas.projects.services.entity.FoodCoordinator;
-import com.timas.projects.services.entity.FoodService;
-import com.timas.projects.services.entity.ReproduceCoordinator;
-import com.timas.projects.services.entity.ReproduceService;
-import com.timas.projects.services.random.RandomService;
+
 import com.timas.projects.services.render.ConsoleRenderStrategy;
-import com.timas.projects.services.render.RenderParam;
 import com.timas.projects.services.render.RenderService;
 import com.timas.projects.services.render.RenderStrategy;
 import lombok.AccessLevel;
@@ -28,8 +16,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j;
 
 import java.io.File;
-import java.net.URI;
-import java.util.Collection;
 
 @Log4j
 @FieldDefaults(level = AccessLevel.PRIVATE)

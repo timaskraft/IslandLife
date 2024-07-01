@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 public class EventSpawnFlora extends Event implements EventOfTheWorld<Long>{
 
-    /* TODO:: можно было бы генерировать сущность воды, и рандомно расбрасывать по полю рандомное
+    /* TODO:: можно было бы генерировать сущность воды, и рандомно разбрасывать по полю рандомное
               количество, далее уже обработать количество води и взаимосвязь между животными и растениями.
               НО пока - идет дождь, и каждая сущность растения получает шанс репродукции.
     */
@@ -48,8 +48,6 @@ public class EventSpawnFlora extends Event implements EventOfTheWorld<Long>{
             //* сюда будем добавлять появившиеся растения */
             Set<Entity> growFlora = ConcurrentHashMap.newKeySet();
 
-            //способ роста - рандом на клетке.
-            //получить все возможные растения possible_flora;
             Flora poss_flora = possible_flora.get( reproduceCoordinator.getRandomService()
                                                     .nextInt(0,possible_flora.size() -1)
                                                  );
@@ -60,9 +58,6 @@ public class EventSpawnFlora extends Event implements EventOfTheWorld<Long>{
                                       .count();
             // если больше чем положено, выходим
             if( poss_flora.getMaxAmount() <= plants_in ) return;
-            // сколько попытаться сгенерировать таких растений с шансом генерации из конфига, не более чем возможно
-           // long how_many = reproduceCoordinator.getRandomService().nextInt(plants_in  ,poss_flora.getMaxAmount() );
-          //  for (int i = 0; i < how_many; i++) {
             Entity entity = reproduceCoordinator.bornWithDefaultChanceSpawn( poss_flora);
                 if (entity!=null) {
                     growFlora.add(entity);
@@ -79,33 +74,3 @@ public class EventSpawnFlora extends Event implements EventOfTheWorld<Long>{
 
     }
 }
-
-
-/*
-            //альтернативный способ роста - деление растений на клетке.
-            cell.getValue()
-                    .parallelStream()
-                    .filter(Flora.class::isInstance)
-                    .filter(e->((Flora) e).getLive()>0) //только по живым растениям
-                    .forEach(e->{
-Entity entity = reproduceCoordinator.born(e);
-                        if (entity!=null) {
-
-long wild_grow  = growFlora.size();
-long plants_in  = cell.getValue()
-        .parallelStream()
-        .filter(p->p.getClass().equals(e.getClass()))
-        .count();
-
-// если уже рожденные + те которые растут в клетке < максимально возможных, то растим еще!
-                            if( wild_grow + plants_in < e.getMaxAmount()  )
-        {
-        growFlora.add(entity);
-                                flora_grow.incrementAndGet();
-                            };
-                                    }
-                                    });
-
-                                    cell.getValue().addAll(growFlora);
-
- */

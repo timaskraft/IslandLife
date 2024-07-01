@@ -16,15 +16,6 @@ public class WordCreator {
 
     private static World PROTOTYPE_OF_WORLD;
 
-/*
-
-    public WordCreator(String configFile)
-    {
-        this.configFile = configFile;
-
-        init();
-    }
-*/
     public WordCreator()
     {
         this.configFile = null;
@@ -63,15 +54,6 @@ public class WordCreator {
         }
         return world;
     }
-
-    public World createNewWorld()
-    {
-        log.info("Use config:" + configFile);
-
-        return new World();
-    }
-
-
 
 
 }

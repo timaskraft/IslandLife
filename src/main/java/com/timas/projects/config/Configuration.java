@@ -2,24 +2,13 @@ package com.timas.projects.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-
-import javax.swing.*;
 
 @Log4j
 @Data
 
 public class Configuration {
-
-
-   // final String level_debug = "DEBUG";
-
-    //String config_file;
 
     /* Фактор генерации, уменьшает в n раз первичные популяции */
     @JsonProperty

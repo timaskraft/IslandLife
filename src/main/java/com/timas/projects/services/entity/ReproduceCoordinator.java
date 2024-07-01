@@ -3,16 +3,12 @@ package com.timas.projects.services.entity;
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
 import com.timas.projects.game.entity.alive.fauna.Fauna;
-import com.timas.projects.game.entity.alive.flora.Flora;
-import com.timas.projects.game.world.Cell;
 import com.timas.projects.services.random.RandomService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,44 +43,17 @@ public class ReproduceCoordinator {
     public Collection<Entity> generate(Collection<Entity> entityCollection,int factor_generate)
      {
         Set<Entity> newList = ConcurrentHashMap.newKeySet();
-        int finalFactor_generate = Math.max(factor_generate, 1);
+
         entityCollection.forEach(entity -> {
 
-            /* расселение в соответсвии с шансом спавна */
             Entity bornEntity = bornWithDefaultChanceSpawn(entity);
             if (bornEntity!=null)
                 newList.add(bornEntity);
 
-            // случайно возможное количество вида на клетке, шанс не боле чем.
-            //int possible_count_in_cell = randomService.nextInt(0,entity.getMaxAmount()/ finalFactor_generate); //   randomService.chanceReceived(entity.getChanceReproduce());
-            //for (int i = 0; i < possible_count_in_cell; i++) {
-            //    Entity bornEntity = bornWithDefaultChanceSpawn(entity);
-            //    if (bornEntity!=null)
-            //        newList.add(bornEntity);
-           // }
         });
 
         return newList;
     }
-
-    public Collection<Entity> spawn(Collection<Entity> entityCollection,int factor_generate)
-    {
-        Set<Entity> newList = ConcurrentHashMap.newKeySet();
-        int finalFactor_generate = Math.max(factor_generate, 1);
-        entityCollection.forEach(entity -> {
-            // случайно возможное количество вида на клетке, шанс не боле чем.
-            int possible_count_in_cell = randomService.nextInt(0,entity.getMaxAmount()/ finalFactor_generate); //   randomService.chanceReceived(entity.getChanceReproduce());
-            for (int i = 0; i < possible_count_in_cell; i++) {
-                Entity bornEntity = born(entity);
-                if (bornEntity!=null)
-                    newList.add(bornEntity);
-            }
-        });
-
-        return newList;
-    }
-
-
 
     public Entity born(Entity who) {
         try {
@@ -108,9 +77,4 @@ public class ReproduceCoordinator {
            return null;
     }
 
-    public Entity bornWithChanceSpawn(Entity who,int chanceSpawn) {
-        if ( randomService.takeChance(chanceSpawn) )
-            return born(who);
-        return null;
-    }
 }

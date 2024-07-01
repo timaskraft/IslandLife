@@ -3,7 +3,6 @@ package com.timas.projects.lifecycle;
 import com.timas.projects.config.Configuration;
 import com.timas.projects.game.relation.RelationEaten;
 import com.timas.projects.game.world.World;
-import com.timas.projects.lifecycle.events.EventOfTheWorld;
 import com.timas.projects.lifecycle.events.WorldCreation;
 import com.timas.projects.lifecycle.tasks.EventTask;
 import com.timas.projects.lifecycle.tasks.RenderTask;

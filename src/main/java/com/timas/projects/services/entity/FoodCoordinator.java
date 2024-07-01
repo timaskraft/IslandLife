@@ -2,8 +2,7 @@ package com.timas.projects.services.entity;
 
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
-import com.timas.projects.game.entity.alive.fauna.Fauna;
-import com.timas.projects.game.entity.alive.flora.Flora;
+
 import com.timas.projects.game.relation.RelationEaten;
 import com.timas.projects.services.random.RandomService;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import lombok.extern.log4j.Log4j;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Log4j
 @RequiredArgsConstructor
@@ -36,7 +34,7 @@ public class FoodCoordinator {
                 .parallelStream()
                 .filter(Alive.class::isInstance)
                 .map(Alive.class::cast)
-                .filter(e->(e.getFood()<e.getMaxFood() & e.getLive()>0))
+                .filter(e->( (e.getFood() < e.getMaxFood()) & e.getLive()>0 ) )
                 .iterator();
         while (it.hasNext()) {
 

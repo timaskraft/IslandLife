@@ -1,8 +1,6 @@
 package com.timas.projects.lifecycle.tasks;
 
 import com.timas.projects.config.Configuration;
-import com.timas.projects.game.relation.RelationEaten;
-import com.timas.projects.lifecycle.events.EventCheckEnd;
 import com.timas.projects.lifecycle.events.EventFeeding;
 import com.timas.projects.lifecycle.events.EventMovingFauna;
 import com.timas.projects.lifecycle.events.EventSpawnFauna;
@@ -10,7 +8,6 @@ import com.timas.projects.repository.WorldModifier;
 import com.timas.projects.services.entity.FoodCoordinator;
 import com.timas.projects.services.entity.MoveCoordinator;
 import com.timas.projects.services.entity.ReproduceCoordinator;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
@@ -36,8 +33,6 @@ public class RoutineTask extends LifeTask{
             Long moving = new EventMovingFauna(worldModifier, moveCoordinator).event();
 
             log.info("ate : " + dead_eating + " were born :" + spawning + " moved:" + moving);
-
-            // check life is END.
 
         }catch (Exception e)
         {

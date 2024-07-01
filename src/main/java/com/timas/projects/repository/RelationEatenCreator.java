@@ -3,23 +3,17 @@ package com.timas.projects.repository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.timas.projects.annotations.Config;
 import com.timas.projects.exeptions.InitException;
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.relation.RelationEaten;
-import com.timas.projects.game.world.World;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Log4j
 public class RelationEatenCreator {
@@ -62,7 +56,6 @@ public class RelationEatenCreator {
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        YAMLMapper yamlMapper = new YAMLMapper();
         RelationEaten relationEaten = new RelationEaten();
         try
         {

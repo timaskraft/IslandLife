@@ -3,7 +3,6 @@ package com.timas.projects.lifecycle.tasks;
 import com.timas.projects.game.world.World;
 import com.timas.projects.services.render.RenderParam;
 import com.timas.projects.services.render.RenderService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 

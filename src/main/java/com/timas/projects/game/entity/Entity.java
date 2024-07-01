@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 abstract public class Entity implements Cloneable{

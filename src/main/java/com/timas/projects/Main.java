@@ -1,12 +1,5 @@
 package com.timas.projects;
-
-import com.timas.projects.utils.ResourceFilesUtil;
 import lombok.extern.log4j.Log4j;
-
-import org.apache.log4j.PropertyConfigurator;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 
 /**

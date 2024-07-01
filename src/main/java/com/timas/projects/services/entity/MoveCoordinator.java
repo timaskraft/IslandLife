@@ -4,17 +4,14 @@ import com.timas.projects.game.Direction;
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
 import com.timas.projects.game.entity.alive.fauna.Fauna;
-import com.timas.projects.game.entity.alive.flora.Flora;
 import com.timas.projects.game.world.Coordinate;
 import com.timas.projects.repository.WorldModifier;
 import com.timas.projects.services.random.RandomService;
-import com.timas.projects.utils.EntityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Log4j
 @RequiredArgsConstructor
@@ -96,7 +93,7 @@ public class MoveCoordinator{
                             throw new RuntimeException(e);
                         }
 
-                    };
+                    }
                 }
         }
 

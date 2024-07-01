@@ -53,12 +53,21 @@
 
 
     </dependencies>
-    <repositories>
+   <!-- <repositories>
         <repository>
             <id>maven_central</id>
             <name>Maven Central</name>
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
-    </repositories>
+    </repositories>-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.23.0</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
