@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j;
 
 @Log4j
 @RequiredArgsConstructor
-public class RoutineTask extends LifeTask{
+public class RoutineTask extends LifeTask {
     final WorldModifier worldModifier;
     final FoodCoordinator foodCoordinator;
     final ReproduceCoordinator reproduceCoordinator;
@@ -23,7 +23,7 @@ public class RoutineTask extends LifeTask{
 
     @Override
     public void run() {
-        count_tick ++;
+        count_tick++;
         try {
 
             Long dead_eating = new EventFeeding(worldModifier, foodCoordinator).event();
@@ -34,8 +34,7 @@ public class RoutineTask extends LifeTask{
 
             log.info("ate : " + dead_eating + " were born :" + spawning + " moved:" + moving);
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error(e.getLocalizedMessage());
         }
     }

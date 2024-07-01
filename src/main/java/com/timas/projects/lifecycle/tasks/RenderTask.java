@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j;
 
 @Log4j
 @RequiredArgsConstructor
-public class RenderTask extends LifeTask{
+public class RenderTask extends LifeTask {
     final RenderService renderService;
     final World world;
 
@@ -17,7 +17,7 @@ public class RenderTask extends LifeTask{
     @Override
     public void run() {
 
-        count_tick ++;
+        count_tick++;
 
         param.setTick(count_tick);
         param.setField(world.getGameField());

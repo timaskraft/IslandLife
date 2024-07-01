@@ -2,7 +2,6 @@ package com.timas.projects.services.entity;
 
 import com.timas.projects.game.entity.Entity;
 import com.timas.projects.game.entity.alive.Alive;
-
 import com.timas.projects.game.relation.RelationEaten;
 import com.timas.projects.services.random.RandomService;
 import lombok.Getter;
@@ -34,7 +33,7 @@ public class FoodCoordinator {
                 .parallelStream()
                 .filter(Alive.class::isInstance)
                 .map(Alive.class::cast)
-                .filter(e->( (e.getFood() < e.getMaxFood()) & e.getLive()>0 ) )
+                .filter(e -> ((e.getFood() < e.getMaxFood()) & e.getLive() > 0))
                 .iterator();
         while (it.hasNext()) {
 
@@ -52,19 +51,18 @@ public class FoodCoordinator {
                         .filter(Alive.class::isInstance)
                         .map(Alive.class::cast)
                         .filter(e -> possibleEaten.containsKey(e.getClass())
-                                &&  !possibleEaten.containsKey(who.getClass())
-                                &&  e.getLive()>0
+                                && !possibleEaten.containsKey(who.getClass())
+                                && e.getLive() > 0
                         )
                         .findFirst();
 
-                        toBeEaten.ifPresent(toBe -> {
-                                    int chance = relationEaten.getEaten(who.getClass(),toBe.getClass());
-                                    if (randomService.takeChance(chance ) )
-                                    {
-                                        foodService.eat(who, toBe );
-                                        deads.add(toBe);
-                                    }
-                                }
+                toBeEaten.ifPresent(toBe -> {
+                            int chance = relationEaten.getEaten(who.getClass(), toBe.getClass());
+                            if (randomService.takeChance(chance)) {
+                                foodService.eat(who, toBe);
+                                deads.add(toBe);
+                            }
+                        }
                 );
             }
         }

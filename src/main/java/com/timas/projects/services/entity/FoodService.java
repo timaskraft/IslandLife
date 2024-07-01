@@ -10,7 +10,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @RequiredArgsConstructor
 public class FoodService {
-    public <T extends Alive> Entity eat(T who,T whom){
+    public <T extends Alive> Entity eat(T who, T whom) {
         //todo:: who.setFood();
         whom.setLive(0);
         return whom;

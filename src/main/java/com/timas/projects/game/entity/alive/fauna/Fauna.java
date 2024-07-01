@@ -11,10 +11,10 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 abstract public class Fauna extends Alive {
     /**
-     *  true - самец, false - самка
+     * true - самец, false - самка
      **/
     boolean isMale;
 }

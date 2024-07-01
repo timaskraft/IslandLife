@@ -9,8 +9,7 @@ import lombok.extern.log4j.Log4j;
 public class RenderService {
     private RenderStrategy renderStrategy;
 
-    public RenderService(RenderStrategy renderStrategy)
-    {
+    public RenderService(RenderStrategy renderStrategy) {
         this.renderStrategy = renderStrategy;
     }
 

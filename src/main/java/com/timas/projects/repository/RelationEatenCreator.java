@@ -20,14 +20,16 @@ public class RelationEatenCreator {
 
     static Set<Class<? extends Entity>> entities;
 
-    public RelationEatenCreator(Set<Class<? extends Entity> > entities)
-    {
+    public RelationEatenCreator(Set<Class<? extends Entity>> entities) {
         this.entities = entities;
     }
 
+    private static boolean isItOnEntities(String name_entity) {
+        return entities.parallelStream()
+                .anyMatch(entity -> entity.getSimpleName().equals(name_entity));
+    }
 
-    public RelationEaten getRelationEaten()
-    {
+    public RelationEaten getRelationEaten() {
 
         Config config = RelationEaten.class.getAnnotation(Config.class);
 
@@ -35,12 +37,6 @@ public class RelationEatenCreator {
 
         return loadRelationEaten(url);
 
-    }
-
-    private static boolean isItOnEntities(String name_entity)
-    {
-        return entities.parallelStream()
-                .anyMatch(entity -> entity.getSimpleName().equals(name_entity));
     }
 
     private Class<? extends Entity> getClassFromKey(String key, Set<Class<? extends Entity>> entities) {
@@ -51,38 +47,34 @@ public class RelationEatenCreator {
     }
 
     @SneakyThrows
-    private  RelationEaten loadRelationEaten(URL resource)
-    {
+    private RelationEaten loadRelationEaten(URL resource) {
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         RelationEaten relationEaten = new RelationEaten();
-        try
-        {
-            Map<String,Map<String,Integer>> dataYaml = objectMapper.readValue(new File(resource.toURI()), Map.class);
+        try {
+            Map<String, Map<String, Integer>> dataYaml = objectMapper.readValue(new File(resource.toURI()), Map.class);
 
             dataYaml.forEach((whoKey, whomValue) -> {
-                        //проверить, есть ли whokey в entities и загрузить только валидные
+                //проверить, есть ли whokey в entities и загрузить только валидные
 
-                        if(isItOnEntities(whoKey))
-                        {
-                            log.debug(whoKey);
-                            // Приведение типов для работы с вложенной картой
-                            Map<String, Integer> whomMap = (Map<String, Integer>) whomValue;
-                            whomMap.forEach((whomKey, weight) -> {
-                                if (isItOnEntities(whomKey)) {
-                                    relationEaten.addRelation(getClassFromKey(whoKey,entities), getClassFromKey(whomKey, entities), weight);
-                                }
-                            });
+                if (isItOnEntities(whoKey)) {
+                    log.debug(whoKey);
+                    // Приведение типов для работы с вложенной картой
+                    Map<String, Integer> whomMap = (Map<String, Integer>) whomValue;
+                    whomMap.forEach((whomKey, weight) -> {
+                        if (isItOnEntities(whomKey)) {
+                            relationEaten.addRelation(getClassFromKey(whoKey, entities), getClassFromKey(whomKey, entities), weight);
                         }
+                    });
+                }
             });
 
             return relationEaten;
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             String message = String.format("Cannot find config file %s, for class %s", resource.getFile(), RelationEaten.class);
-            throw new InitException(message,e);
+            throw new InitException(message, e);
         }
 
     }

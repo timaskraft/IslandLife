@@ -20,13 +20,11 @@ public class WorldModifier {
     final World world;
 
 
-    public void init(int sizeX, int sizeY)
-    {
-        world.setGameField( new Field(sizeX,sizeY));
+    public void init(int sizeX, int sizeY) {
+        world.setGameField(new Field(sizeX, sizeY));
     }
 
-    public void update( BiConsumer<Coordinate,Cell> operation)
-    {
+    public void update(BiConsumer<Coordinate, Cell> operation) {
         Objects.requireNonNull(operation);
 
         var rowIterator = world.getGameField().getField().entrySet().iterator();

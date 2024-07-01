@@ -14,15 +14,13 @@ public class Cell {
 
     private Collection<Entity> value = ConcurrentHashMap.newKeySet();
 
-    public void clear()
-    {
+    public void clear() {
         value.clear();
     }
 
     public void setValue(Collection<Entity> value) {
         this.value = value;
     }
-
 
 
 }

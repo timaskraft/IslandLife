@@ -12,8 +12,7 @@ public class Coordinate {
     private int x;
     private int y;
 
-    public Coordinate()
-    {
+    public Coordinate() {
         this.x = 0;
         this.y = 0;
     }
@@ -25,6 +24,6 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return "{"+x+":"+y+"}";
+        return "{" + x + ":" + y + "}";
     }
 }

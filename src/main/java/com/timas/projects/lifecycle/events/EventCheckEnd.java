@@ -8,7 +8,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @RequiredArgsConstructor
 @Getter
-public class EventCheckEnd extends Event implements EventOfTheWorld<Boolean>{
+public class EventCheckEnd extends Event implements EventOfTheWorld<Boolean> {
     final WorldModifier worldModifier;
 
     @Override

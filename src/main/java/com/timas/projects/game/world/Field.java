@@ -13,12 +13,11 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Field {
 
-    ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Cell>> field ;
+    ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Cell>> field;
 
-    public Field(int sizeX, int sizeY)
-    {
-        if (sizeX<=0 | sizeY<=0) {
-            String message = String.format("size X and size Y must be >0 ( x= %s y=%s )",sizeX,sizeY);
+    public Field(int sizeX, int sizeY) {
+        if (sizeX <= 0 | sizeY <= 0) {
+            String message = String.format("size X and size Y must be >0 ( x= %s y=%s )", sizeX, sizeY);
             throw new IllegalArgumentException(message);
         }
 
@@ -31,22 +30,20 @@ public class Field {
                 newRow.put(x, new Cell());
             }
 
-            field.put(y,newRow);
+            field.put(y, newRow);
         }
         log.debug("field create ");
     }
 
-    public int getSizeY()
-    {
+    public int getSizeY() {
         return field.size();
     }
 
-    public int getSizeX()
-    {
+    public int getSizeX() {
         return field.get(0).size();
     }
-    public Collection<Entity> getAllCollection()
-    {
+
+    public Collection<Entity> getAllCollection() {
         return field.values().parallelStream()
                 .flatMap(m -> m.values().stream())
                 .map(Cell::getValue)
@@ -54,31 +51,26 @@ public class Field {
                 .collect(Collectors.toList());
     }
 
-    public Collection<Entity> getCollectionFromCell(int x, int y)
-    {
-        return  field.get(y).get(x).getValue();
+    public Collection<Entity> getCollectionFromCell(int x, int y) {
+        return field.get(y).get(x).getValue();
     }
-    public ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Cell>> getField()
-    {
+
+    public ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Cell>> getField() {
         return field;
     }
 
 
-
-    public Collection<Entity> getEntityFromCoordinate(int x,int y,Class<? extends Entity> aClass)
-    {
-        return getCollectionFromCell(x,y)
+    public Collection<Entity> getEntityFromCoordinate(int x, int y, Class<? extends Entity> aClass) {
+        return getCollectionFromCell(x, y)
                 .parallelStream()
                 .filter(e -> aClass.isAssignableFrom(e.getClass())).collect(Collectors.toSet());
 
     }
 
 
-    public boolean isValidCoordinates(int x, int y)
-    {
-        return ((x>=0 & x< getSizeX()) & (y>=0 & y< getSizeY()) );
+    public boolean isValidCoordinates(int x, int y) {
+        return ((x >= 0 & x < getSizeX()) & (y >= 0 & y < getSizeY()));
     }
-
 
 
 }

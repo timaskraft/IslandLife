@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 abstract public class Amphibia extends Fauna {
 }

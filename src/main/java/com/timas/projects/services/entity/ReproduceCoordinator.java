@@ -26,28 +26,25 @@ public class ReproduceCoordinator {
     private final ReproduceService reproduceService;
 
 
-    public Collection<Entity> generate()
-    {
-        return  generate(1);
-    }
-    public Collection<Entity> generate(int factor_generate)
-    {
-        return generate(reproduceService.getEntityFactory().getPrototypesEntities(Alive.class),factor_generate );
+    public Collection<Entity> generate() {
+        return generate(1);
     }
 
-    public Collection<Entity> generate(Class <? extends Entity> aClass)
-    {
-        return generate(reproduceService.getEntityFactory().getPrototypesEntities(aClass),1);
+    public Collection<Entity> generate(int factor_generate) {
+        return generate(reproduceService.getEntityFactory().getPrototypesEntities(Alive.class), factor_generate);
     }
 
-    public Collection<Entity> generate(Collection<Entity> entityCollection,int factor_generate)
-     {
+    public Collection<Entity> generate(Class<? extends Entity> aClass) {
+        return generate(reproduceService.getEntityFactory().getPrototypesEntities(aClass), 1);
+    }
+
+    public Collection<Entity> generate(Collection<Entity> entityCollection, int factor_generate) {
         Set<Entity> newList = ConcurrentHashMap.newKeySet();
 
         entityCollection.forEach(entity -> {
 
             Entity bornEntity = bornWithDefaultChanceSpawn(entity);
-            if (bornEntity!=null)
+            if (bornEntity != null)
                 newList.add(bornEntity);
 
         });
@@ -64,17 +61,16 @@ public class ReproduceCoordinator {
 
             return bornEntity;
 
-        }catch (CloneNotSupportedException e)
-        {
+        } catch (CloneNotSupportedException e) {
             log.error(e.getLocalizedMessage());
         }
         return null;
     }
 
     public Entity bornWithDefaultChanceSpawn(Entity who) {
-           if ( randomService.takeChance(who.getChanceSpawn()) )
-                    return born(who);
-           return null;
+        if (randomService.takeChance(who.getChanceSpawn()))
+            return born(who);
+        return null;
     }
 
 }

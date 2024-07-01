@@ -3,7 +3,10 @@ package com.timas.projects.game.entity.alive;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.timas.projects.game.entity.Entity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -12,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 abstract public class Alive extends Entity {
     /**
      * Скорость перемещения, не более чем, клеток за ход
@@ -40,7 +43,6 @@ abstract public class Alive extends Entity {
     /* Сколько тиков возраст этого организма */
     @JsonProperty
     int age = 0;
-
 
 
 }

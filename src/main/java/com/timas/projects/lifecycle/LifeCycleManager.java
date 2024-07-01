@@ -19,6 +19,7 @@ import lombok.extern.log4j.Log4j;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 @Log4j
 @RequiredArgsConstructor
 public class LifeCycleManager {
@@ -34,32 +35,30 @@ public class LifeCycleManager {
 
     /*Взаимосвязи между сущностями, кто кого кушает */
     private final RelationEaten relationEaten = new RelationEatenCreator(entityFactory.getTypesOfEntities()).getRelationEaten();
+    private final FoodCoordinator foodCoordinator = new FoodCoordinator(randomService, foodService, relationEaten);
     /* сервис репродукции */
     private final ReproduceService reproduceService = new ReproduceService(entityFactory);
     private final ReproduceCoordinator reproduceCoordinator = new ReproduceCoordinator(randomService, reproduceService);
-
     /* сервис питания */
     private final FoodService foodService = new FoodService();
-    private final FoodCoordinator foodCoordinator = new FoodCoordinator(randomService,foodService,relationEaten);
     ////////////////////////////////////////////////////////////////////////////////////////////
     /* сервис движения */
     private final MoveService moveService = new MoveService();
-    private final MoveCoordinator moveCoordinator = new MoveCoordinator(randomService,moveService);
+    private final MoveCoordinator moveCoordinator = new MoveCoordinator(randomService, moveService);
 
 
     /* пул потоков */
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
 
 
-
     public void startLifeCycle() {
 
         /* инит модификатора мира */
         WorldModifier worldModifier = new WorldModifier(world);
-        worldModifier.init(configuration.getSizeX(),configuration.getSizeY());
+        worldModifier.init(configuration.getSizeX(), configuration.getSizeY());
 
         /* запускаем евент заселение мира */
-        new WorldCreation(worldModifier,reproduceCoordinator,configuration).event();
+        new WorldCreation(worldModifier, reproduceCoordinator, configuration).event();
 
         /* Разделим лайф цикл на несколько блоков
           1 - рутина (покушали - размножились - походили)
@@ -69,24 +68,23 @@ public class LifeCycleManager {
 
         // Блок 1 - Рутина: покушали - размножились - походили
 
-        RoutineTask routineTask = new RoutineTask(worldModifier,foodCoordinator,reproduceCoordinator,moveCoordinator,configuration);
+        RoutineTask routineTask = new RoutineTask(worldModifier, foodCoordinator, reproduceCoordinator, moveCoordinator, configuration);
 
         executorService.scheduleWithFixedDelay(routineTask, 0, configuration.getPause_routine(), TimeUnit.MILLISECONDS);
 
 
-        if (configuration.getEvent_timeout()>0) {
+        if (configuration.getEvent_timeout() > 0) {
             // Блок 2 - Ивенты: рост растений, катаклизмы
 
-            EventTask eventsTask = new EventTask(worldModifier,reproduceCoordinator,configuration);
+            EventTask eventsTask = new EventTask(worldModifier, reproduceCoordinator, configuration);
 
             executorService.scheduleWithFixedDelay(eventsTask, 0, configuration.getEvent_timeout(), TimeUnit.SECONDS);
         }
 
 
-        if (configuration.getStatistics_timeout()>0)
-        {
+        if (configuration.getStatistics_timeout() > 0) {
             // Блок 3 - Рендер мира и вывод статистики каждые n секунд
-            RenderTask renderTask = new RenderTask(renderService,world);
+            RenderTask renderTask = new RenderTask(renderService, world);
 
             executorService.scheduleWithFixedDelay(renderTask, 0, configuration.getStatistics_timeout(), TimeUnit.SECONDS);
         }

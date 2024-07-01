@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j;
 
 @Log4j
 @RequiredArgsConstructor
-public class EventTask extends LifeTask{
+public class EventTask extends LifeTask {
     final WorldModifier worldModifier;
     final ReproduceCoordinator coordinator;
     final Configuration configuration;
@@ -25,9 +25,9 @@ public class EventTask extends LifeTask{
 
         // Event RAIN
         // Если дождь прошел, то растения появляются.
-        if(coordinator.getRandomService().takeChance(configuration.getChance_rain())) {
-           long flora_grow  =  new EventSpawnFlora(worldModifier,coordinator).event();
-           log.info("It rained \uD83C\uDF27 and "+flora_grow+" \uD83C\uDF31 plants grew");
+        if (coordinator.getRandomService().takeChance(configuration.getChance_rain())) {
+            long flora_grow = new EventSpawnFlora(worldModifier, coordinator).event();
+            log.info("It rained \uD83C\uDF27 and " + flora_grow + " \uD83C\uDF31 plants grew");
         }
 
 

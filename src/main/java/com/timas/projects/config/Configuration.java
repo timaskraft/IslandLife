@@ -57,7 +57,8 @@ public class Configuration {
     int chance_kill = 50;
 
     @JsonCreator
-    public Configuration(){}
+    public Configuration() {
+    }
 
 
 }

@@ -16,16 +16,28 @@ public class WordCreator {
 
     private static World PROTOTYPE_OF_WORLD;
 
-    public WordCreator()
-    {
+    public WordCreator() {
         this.configFile = null;
 
         init();
     }
 
-    private void init()
-    {
-        if (configFile==null) {
+    @SneakyThrows
+    private static World loadWorld(URL resource) {
+        YAMLMapper yamlMapper = new YAMLMapper();
+        World world;
+        try {
+            world = yamlMapper.readValue(resource, World.class);
+
+        } catch (Exception e) {
+            String message = String.format("Cannot find config file %s, for class %s", resource.getFile(), World.class);
+            throw new InitException(message, e);
+        }
+        return world;
+    }
+
+    private void init() {
+        if (configFile == null) {
 
             //default config
             Config config = World.class.getAnnotation(Config.class);
@@ -33,26 +45,9 @@ public class WordCreator {
         }
 
     }
-    public World getPrototypeOfWorld()
-    {
+
+    public World getPrototypeOfWorld() {
         return PROTOTYPE_OF_WORLD;
-    }
-
-    @SneakyThrows
-    private static World loadWorld(URL resource)
-    {
-        YAMLMapper yamlMapper = new YAMLMapper();
-        World world;
-        try
-        {
-            world = yamlMapper.readValue(resource, World.class);
-
-        }catch (Exception e)
-        {
-            String message = String.format("Cannot find config file %s, for class %s", resource.getFile(), World.class);
-            throw new InitException(message,e);
-        }
-        return world;
     }
 
 

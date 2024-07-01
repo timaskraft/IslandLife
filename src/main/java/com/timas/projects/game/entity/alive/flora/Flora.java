@@ -10,6 +10,6 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 abstract public class Flora extends Alive {
 }

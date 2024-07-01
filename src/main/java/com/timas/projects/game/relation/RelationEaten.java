@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@ToString(callSuper=true, includeFieldNames=true)
+@ToString(callSuper = true, includeFieldNames = true)
 @Config(filename = "config/relation/relation_eaten.yaml")
 public class RelationEaten {
 
-    private  Map<Class<? extends Alive>, Map<Class <? extends Alive> , Integer>>  relation = new HashMap<>();
+    private Map<Class<? extends Alive>, Map<Class<? extends Alive>, Integer>> relation = new HashMap<>();
 
     // Метод для добавления отношения и его веса в карту
     public void addRelation(Class<? extends Entity> who, Class<? extends Entity> whom, Integer weight) {
@@ -23,12 +23,11 @@ public class RelationEaten {
         relation.put((Class<? extends Alive>) who, whomMap);
     }
 
-    public Map<Class <? extends Alive> , Integer> getEatenMap(Class<? extends Alive> who_key )
-    {
+    public Map<Class<? extends Alive>, Integer> getEatenMap(Class<? extends Alive> who_key) {
         return relation.getOrDefault(who_key, new HashMap<>());//get(who_key);
     }
-    public Integer getEaten(Class<? extends Alive> who_key, Class<? extends Alive> whom_key )
-    {
+
+    public Integer getEaten(Class<? extends Alive> who_key, Class<? extends Alive> whom_key) {
         return getEatenMap(who_key).get(whom_key);
     }
 

@@ -22,7 +22,7 @@ public class ResourceFilesUtil {
             Set<File> filenames = walk
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString()
-                                  .endsWith(ext))
+                            .endsWith(ext))
                     .map(Path::toFile)
                     .collect(Collectors.toSet());
             return filenames;
